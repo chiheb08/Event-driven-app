@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  orders_backend:
+    restart: always
+    image: orders_backend:v1
+    ports:
+      - "5002:5002"
+    networks:
+      - ikea-ordering-kafka_default
+
+networks:
+  ikea-ordering-kafka_default:
+    external: true
