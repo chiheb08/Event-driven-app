@@ -8,7 +8,21 @@ services:
       - "5002:5002"
     networks:
       - ikea-ordering-kafka_default
-
+  transactions_backend:
+    restart: always 
+    image: transactions_backend:v1 
+    ports: 
+      - "5003:5003" 
+    networks:
+      - ikea-ordering-kafka_default 
+  email_backend:
+    restart: always 
+    image: email_backend:v1 
+    ports: 
+      - "5004:5004" 
+    networks:
+      - ikea-ordering-kafka_default 
+  
 networks:
   ikea-ordering-kafka_default:
     external: true

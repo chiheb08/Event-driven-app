@@ -7,6 +7,9 @@ services:
     container_name: zookeeper
     ports:
       - "2181:2181"
+    networks:
+      - ikea-ordering-kafka_default
+
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -20,6 +23,8 @@ services:
     ports:
       - "9092:9092"
       - "29093:29093"
+    networks:
+      - ikea-ordering-kafka_default
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
@@ -39,8 +44,9 @@ services:
     image: confluentinc/cp-kafka:5.4.0
     hostname: kafka-tools
     container_name: kafka-tools
+    networks:
+      - ikea-ordering-kafka_default
     command: ["tail", "-f", "/dev/null"]
-    network_mode: "host"
 
   schema-registry:
     image: confluentinc/cp-schema-registry:5.4.0
@@ -51,6 +57,8 @@ services:
       - broker
     ports:
       - "8081:8081"
+    networks:
+      - ikea-ordering-kafka_default
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: "zookeeper:2181"
@@ -65,6 +73,8 @@ services:
       - schema-registry
     ports:
       - "9021:9021"
+    networks:
+      - ikea-ordering-kafka_default
     environment:
       CONTROL_CENTER_BOOTSTRAP_SERVERS: 'broker:29092'
       CONTROL_CENTER_ZOOKEEPER_CONNECT: 'zookeeper:2181'
@@ -79,6 +89,8 @@ services:
     container_name: kafka-ui
     ports:
     - "8080:8080"
+    networks:
+      - ikea-ordering-kafka_default
     restart: always
     environment:
     - KAFKA_CLUSTERS_0_NAME=local
@@ -86,3 +98,6 @@ services:
     - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
     - KAFKA_CLUSTERS_0_PROPERTIES_SECURITY_PROTOCOL=PLAINTEXT
     - KAFKA_CLUSTERS_0_SCHEMAREGISTRY=http://schema-registry:8081     
+networks:
+  ikea-ordering-kafka_default:
+    external: true
